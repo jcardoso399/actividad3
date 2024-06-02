@@ -1,0 +1,31 @@
+Cluster=new ShardingTest({shards:3,chunksixe:1})
+db = (new Mongo("localhost:20006")).getDB("proyecto")
+mongos> db.Entrenadores.insertMany(
+... [
+... {
+... "id":"1",
+... "cedula":"1234567",
+... "telefono":"321234132",
+... }
+... ]
+... );
+{
+    mongos> db.Entrenadores.count()
+    mongos> shard1=new Mongo("localhost:20000")
+    mongos> shard1DB=shard1.getDB("proyecto")
+    mongos> shard1DB.Entrenadores.count()
+    mongos>  shard2=new Mongo("localhost:20001")
+    mongos> shard2DB=shard1.getDB("proyecto")
+    mongos> shard2DB.Entrenadores.count()
+    mongos> shard3=new Mongo("localhost:20002")
+    mongos> shard3DB=shard1.getDB("proyecto")
+    mongos>  shard3DB.Entrenadores.count()
+    mongos> sh.enableSharding("proyecto")
+    mongos>  db.Entrenadores.ensureIndex({id_entrenador:1})
+    sh.shardCollection("proyecto.tecnicos",{id_entrenador:1})
+    sh.getBalancerState()
+mongos> sh.setBalancerState(true)
+sh.isBalancerRunning()
+cluster.stop()
+    
+
